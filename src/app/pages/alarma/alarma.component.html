@@ -1,0 +1,13 @@
+<div class="bg-gray-900 h-screen font-sans pt-10">
+    <div [ngClass]="{'border-green-500': estadoAlarma =='Desactivada','border-yellow-400': estadoAlarma =='Activada','border-red-400': estadoAlarma =='Sonando'}" 
+         class="animate__animated animate__zoomIn bg-white w-11/12 md:w-3/4 lg:w-1/4 p-4 mr-auto ml-auto border-t-8 rounded-t cursor-pointer"
+         (click)="cambiarEstado()">
+         <h1 class="text-center text-xl font-semibold text-gray-800">  Estado de alarma </h1>
+        <h2 class="text-center text-gray-800"> {{ estadoAlarma }} </h2>
+        <div class="flex items-center justify-center">
+            <i *ngIf="(estadoAlarma == 'Desactivada')" class="far fa-bell-slash text-9xl mt-8 text-gray-800 pb-3"></i>
+            <i *ngIf="(estadoAlarma == 'Activada')" class="far fa-bell text-9xl mt-8 text-gray-800 pb-3"></i>
+            <i *ngIf="(estadoAlarma == 'Sonando')" class="fas fa-bullhorn text-9xl mt-8 text-gray-800 pb-3"></i>
+        </div>
+    </div>
+</div>

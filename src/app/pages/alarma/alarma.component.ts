@@ -1,6 +1,8 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { AlarmaService } from '../../services/alarma.service';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-alarma',
@@ -12,10 +14,15 @@ export class AlarmaComponent implements OnInit {
 
   public estadoAlarma = 'Desactivada';
 
-  constructor(private alarmaService: AlarmaService) { }
+  constructor(private alarmaService: AlarmaService,
+              private webSocketService: WebsocketService) { }
   ngOnInit(): void {
     this.alarmaService.getAlarma().subscribe( ({alarma}) => {
       this.estadoAlarma = alarma.estado;
+    });
+    // WebSocket - Se actualiza estado de alarma
+    this.webSocketService.listen('estado_alarma').subscribe( estado => {
+      this.estadoAlarma = estado;
     });
   }
 
@@ -52,6 +59,7 @@ export class AlarmaComponent implements OnInit {
       if (result.isConfirmed) {
         this.estadoAlarma = nuevoEstado;
         this.alarmaService.actualizarAlarma(nuevoEstado).subscribe( resp => {
+          this.webSocketService.emit('estado_alarma', nuevoEstado);  // WebSocket - Envio el nuevo estado
           Swal.fire({
             icon: 'success',
             showConfirmButton: false,
